@@ -1,33 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="mb-3 d-flex justify-content-between align-items-center">
-    <h2>{{ $course->title }} - Enrolled Students</h2>
-    <a href="{{ route('courses.index') }}" class="btn btn-secondary">Back to Courses</a>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <div class="text-truncate" style="max-width: 70%;">
+        <h1 class="fw-bold display-6 text-primary mb-0">{{ $course->title }}</h1>
+        <p class="text-muted mb-0 fst-italic">{{ $course->description ?? 'No description available.' }}</p>
+    </div>
+    <a href="{{ route('courses.index') }}" class="btn btn-outline-secondary shadow-sm align-self-start align-self-md-center">
+        <i class="bi bi-arrow-left-circle me-1"></i> Back to Courses
+    </a>
 </div>
 
-<div class="card">
+<div class="card shadow-sm border-0">
     <div class="card-body p-0">
-        <table class="table table-striped mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($students as $student)
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <td>{{ $student->id }}</td>
-                        <td>{{ $student->name }}</td>
-                        <td>{{ $student->email }}</td>
+                        <th class="text-muted" style="width: 50px;">#</th>
+                        <th class="fw-semibold">Student Name</th>
+                        <th class="fw-semibold">Email</th>
                     </tr>
-                @empty
-                    <tr><td colspan="3" class="text-center py-3">No students enrolled.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse($students as $student)
+                        <tr>
+                            <td class="text-muted">{{ $student->id }}</td>
+                            <td class="fw-bold text-primary">{{ $student->full_name ?? $student->name ?? 'N/A' }}</td>
+                            <td class="text-secondary">{{ $student->email ?? '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-muted fst-italic">
+                                No students enrolled.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+{{-- Optional: SweetAlert for success messages --}}
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: "{{ session('success') }}",
+        timer: 2500,
+        showConfirmButton: false
+    });
+</script>
+@endif
 @endsection

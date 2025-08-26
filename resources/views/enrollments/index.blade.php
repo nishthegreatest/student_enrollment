@@ -6,7 +6,7 @@
   <a href="{{ route('enrollments.create') }}" class="btn btn-primary">+ Add Enrollment</a>
 </div>
 
-<div class="card">
+<div class="card shadow-sm border-0">
   <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-striped mb-0">
@@ -16,7 +16,6 @@
             <th>Student</th>
             <th>Course</th>
             <th>Enrolled At</th>
-            <th>Grade</th>
             <th style="width:160px;">Actions</th>
           </tr>
         </thead>
@@ -27,7 +26,6 @@
               <td>{{ $e->student?->full_name }}</td>
               <td>{{ $e->course?->code }} — {{ $e->course?->title }}</td>
               <td>{{ optional($e->enrolled_at)->format('Y-m-d') }}</td>
-              <td>{{ $e->grade ?? '-' }}</td>
               <td>
                 <a href="{{ route('enrollments.edit', $e) }}" class="btn btn-sm btn-warning">Edit</a>
                 <form action="{{ route('enrollments.destroy', $e) }}" method="POST" class="d-inline"
@@ -38,7 +36,9 @@
               </td>
             </tr>
           @empty
-            <tr><td colspan="6" class="text-center py-3">No enrollments found.</td></tr>
+            <tr>
+              <td colspan="5" class="text-center py-4 text-muted fst-italic">No enrollments found.</td>
+            </tr>
           @endforelse
         </tbody>
       </table>
@@ -46,7 +46,10 @@
   </div>
 </div>
 
-<div class="mt-3">
-  {{ $enrollments->links() }}
+{{-- Pagination --}}
+@if($enrollments->hasPages())
+<div class="d-flex justify-content-end mt-3">
+  {{ $enrollments->links('pagination::bootstrap-5') }}
 </div>
+@endif
 @endsection

@@ -7,9 +7,24 @@
 
   {{-- Bootstrap 5 CDN --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  {{-- SweetAlert2 CDN --}}
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .container {
+      max-width: 1000px;
+    }
+  </style>
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
   <div class="container">
     <a class="navbar-brand" href="{{ route('students.index') }}">SMS</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars">
@@ -26,19 +41,28 @@
 </nav>
 
 <main class="container py-4">
+  {{-- SweetAlert success --}}
   @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: "{{ session('success') }}",
+        timer: 2500,
+        showConfirmButton: false
+      });
+    </script>
   @endif
 
+  {{-- SweetAlert errors --}}
   @if ($errors->any())
-    <div class="alert alert-danger">
-      <strong>There were some problems with your input:</strong>
-      <ul class="mb-0">
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
+    <script>
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        html: `<ul style="text-align:left;">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>`
+      });
+    </script>
   @endif
 
   @yield('content')

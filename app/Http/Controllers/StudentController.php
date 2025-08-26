@@ -9,7 +9,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::orderBy('last_name')->paginate(10);
+        $students = Student::orderBy('id')->paginate(10);
         return view('students.index', compact('students'));
     }
 
@@ -57,5 +57,14 @@ class StudentController extends Controller
     {
         $student->delete();
         return redirect()->route('students.index')->with('success', 'Student deleted.');
+    }
+
+    // Show courses of a student
+    public function courses(Student $student)
+    {
+        $student->load('courses'); // Eager load courses
+        $courses = $student->courses;
+
+        return view('students.courses', compact('student', 'courses'));
     }
 }

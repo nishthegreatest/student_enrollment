@@ -7,17 +7,20 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
+    // Display a paginated list of courses
     public function index()
     {
-        $courses = Course::paginate(10); // or ->get()
+        $courses = Course::orderBy('id')->paginate(10)->withQueryString();
         return view('courses.index', compact('courses'));
     }
 
+    // Show the form to create a new course
     public function create()
     {
         return view('courses.create');
     }
 
+    // Store a newly created course
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -32,11 +35,13 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Course created.');
     }
 
+    // Show the form to edit an existing course
     public function edit(Course $course)
     {
         return view('courses.edit', compact('course'));
     }
 
+    // Update an existing course
     public function update(Request $request, Course $course)
     {
         $data = $request->validate([
@@ -51,17 +56,17 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Course updated.');
     }
 
+    // Delete a course
     public function destroy(Course $course)
     {
         $course->delete();
         return redirect()->route('courses.index')->with('success', 'Course deleted.');
     }
+
+    // Show the students enrolled in a course
     public function show(Course $course)
     {
-        // Assuming many-to-many relation: Course has students
-        $students = $course->students; 
-
+        $students = $course->students; // assumes a many-to-many relationship
         return view('courses.show', compact('course', 'students'));
     }
-
 }
